@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 import os
 import datetime
 import uuid
+import time
 
 from models import db, Users, Patients, Conditions_patient, Conditions, Medications, Medications_patient
 
@@ -13,7 +14,6 @@ mysql_username = os.getenv("MYSQL_USERNAME")
 mysql_password = os.getenv("MYSQL_PASSWORD")
 mysql_host = os.getenv("MYSQL_HOST")
 
-db = SQLAlchemy()
 app = Flask(__name__)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqldb://' + mysql_username + ':' + mysql_password + '@' + mysql_host + ':3306/PssP'
@@ -370,18 +370,14 @@ def delete_condition(): # note this function needs to match name in html form ac
 @app.route('/update_user', methods = ['GET', 'POST'])
 def update_user(): # note this function needs to match name in html form action
     if request.method == 'POST':
-        ## get mrn from form
-        form_email = request.form.get('current_email')
-        user = Users.query.filter_by(email=form_email).first()
+        ## get id from form
+        form_id = request.form.get('id')
+        user = Users.query.filter_by(id=form_id).first()
         user.username = request.form.get('username')
         user.email = request.form.get('email')
         db.session.commit()
         flash("User Account Updated Successfully")
         return redirect(url_for('account'))
-
-
-
-
 
 
 
